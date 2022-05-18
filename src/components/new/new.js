@@ -16,6 +16,13 @@ function New() {
             .then(res => res.json())
             .then(
                 (result) => {
+                    const a = {
+                        'title': result.title,
+                        'href': result.url,
+                        'date': parseISOString(new Date().toUTCString())
+                    };
+                    checkHistore(a);
+
                     setIsLoaded(true);
                     setItems(result);
                     sameIt = result.title.split(" ");
@@ -31,6 +38,20 @@ function New() {
     function parseISOString(s) {
         var dateStr = s.slice(0, -5);
         return new Date(dateStr).toUTCString();
+    }
+
+
+    function checkHistore(a){
+        var bool = false;
+        var item;
+        for (var i=0; i < localStorage.length; i++){
+            var key = localStorage.key(i);
+            item = JSON.parse(localStorage.getItem(key));
+            if (item.date === a.date && item.title === a.title)
+                bool = true;
+        }
+        if (!bool)
+            localStorage.setItem((localStorage.length+1).toString(), JSON.stringify(a));
     }
 
     function fetchSame(){
